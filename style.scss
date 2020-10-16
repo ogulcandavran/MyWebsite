@@ -12,8 +12,9 @@
   @if $breakpoint == phone-big {@media (max-width: 600px){@content}}; 
   @if $breakpoint == tablet-big {@media (max-width: 1200px){@content}};
   @if $breakpoint == tablet-small {@media (max-width: 1000px){@content}};
+  @if $breakpoint == tablet-medium {@media (max-width: 710px){@content}};
   @if $breakpoint == laptop {@media (max-width: 1400px){@content}}; // 1366px
-  @if $breakpoint == flexible {@media (max-width: 37.5em){@content}}; // 600px
+  @if $breakpoint == flexible {@media (max-width: 1700px){@content}}; // 600px
 }
 
 @mixin glitchCopy {
@@ -34,7 +35,7 @@
   --white: #ffffff;
   --main-aqua: #66fcf1;
   --home-margin-bottom: 5rem;
-  --titles-margin-top: 5rem;
+  --titles-margin-top: 3rem;
 }
 
 html {
@@ -367,15 +368,15 @@ section {
     z-index: 100;
   }
 
-  canvas {
+  #fusion {
     position: absolute;
     top: 0;
     left: 0;
     margin: 0;
     padding-top: 6%;
-    background-color:#080808;
     z-index: 2; 
     width: 100%;
+
   }
 
   &__content{
@@ -433,10 +434,143 @@ h2{
   letter-spacing: 8rem;
   font-size: 4.8rem;
   text-align: center;
-  margin-bottom: 10rem;
-  margin-top: var(--titles-margin-top);
- margin-left: 8rem;
+  margin-bottom: 9rem;
+  margin-left: 8rem;
 }
+
+.projects {
+  background-color: #080808;
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+  @include responsive(laptop) {
+    padding: 0 5%;
+    height: auto;
+  }
+
+  &__container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    overflow: hidden;
+  }
+
+  &__cards{
+    width: 100%;
+    display: grid;
+    grid-template-columns:repeat( auto-fit, minmax(300px, max-content) );
+    grid-gap: 2rem 20rem;
+    overflow: hidden;
+    padding: 2px;
+    @include responsive(flexible) {
+      grid-gap: 2rem 6rem;
+    }
+    @include responsive(laptop) {
+      grid-gap: 2rem 2rem;
+    }
+    @include responsive(tablet-medium) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+
+    &__card{
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      -webkit-box-shadow: 1px 1px 5px 0px rgba(35,158,142,0.1);
+-moz-box-shadow: 1px 1px 5px 0px rgba(35,158,142,0.1);
+box-shadow: 1px 1px 5px 0px rgba(35,158,142,0.1);
+max-width: 40rem;
+min-width: 30rem;
+
+      img{
+        width: 100%;
+        min-height: 20rem;
+        max-height: 20rem;
+        margin-bottom: 1rem;
+      }
+
+      &:hover{
+        .projects__cards__card__img-dark{
+          display:none
+        }
+      }
+      &__img-dark{
+        position: absolute;
+        width: 100%;
+        height: 20rem;
+        background-color: var(--black);
+        opacity: 0.4;
+      }
+      h3{
+        margin-bottom: 0.2rem;
+        font-family: var(--nunito);
+        font-size: 1.8rem;
+        font-weight: 500;
+      }
+      p{
+        font-family: var(--nunito);
+        margin-bottom: 0.4rem;
+        font-size: 1rem;
+        font-weight: 300;
+        color: grey;
+        text-transform: uppercase;
+      }
+      span{
+        color:var(--main-aqua);
+        font-family: var(--nunito);
+        font-weight: 400;
+        font-size: 1rem;
+        font-style: italic;
+      }
+
+      &__links-container{
+        display: flex;
+        align-items: center;
+        font-family: var(--nunito);
+        justify-content: space-between;
+        margin: 1rem 0;
+        
+        div{
+          width: 1.2rem;
+          height: 1.2rem;
+        }
+        span{
+          padding: 0 0.2rem;
+          color: white;
+          font-style: normal;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+  
+    
+  }
+
+  .contact{
+    background-color: #080808;
+  width: 100%;
+  height: 100vh;
+
+  .matterjs-container{
+    width: 802px;
+    height: 602px;
+    border: 1px var(--main-aqua) solid;
+  }
+
+  #matterjs{
+    width: 800px;
+    height: 600px;
+    background: #080808 !important;
+  }
+  }
+  
 
 
 

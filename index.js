@@ -1,13 +1,182 @@
-const glitchTarget = document.querySelector('#glitch-target');
-const ctaContainer = document.querySelector('.home__main__cta-container__cta');
-const navElement = document.querySelector('.nav__element')
+const glitchTarget = document.querySelector("#glitch-target");
+const ctaContainer = document.querySelector(".home__main__cta-container__cta");
+const navElement = document.querySelector(".nav__element");
 
-ctaContainer.addEventListener('mouseover', () => glitchTarget.classList.add('glitch'));
-ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove('glitch'));
+ctaContainer.addEventListener("mouseover", () =>
+  glitchTarget.classList.add("glitch")
+);
+ctaContainer.addEventListener("mouseleave", () =>
+  glitchTarget.classList.remove("glitch")
+);
 
-(function () {
-  const canvas = document.getElementById("fusion");
+(function game() {
+  const canvas2 = document.querySelector("#matterjs");
+  
+  var Example = Example || {};
+  Example.bridge = function () {
+    var Engine = Matter.Engine,
+      Render = Matter.Render,
+      Runner = Matter.Runner,
+      Body = Matter.Body,
+      Composites = Matter.Composites,
+      Common = Matter.Common,
+      Constraint = Matter.Constraint,
+      MouseConstraint = Matter.MouseConstraint,
+      Mouse = Matter.Mouse,
+      World = Matter.World,
+      Bodies = Matter.Bodies;
+
+    var engine = Engine.create(),
+      world = engine.world;
+
+    var render = Render.create({
+      canvas: canvas2,
+      engine: engine,
+      options: {
+        width: 800,
+        height: 600,
+        showAngleIndicator: false,
+        wireframes: false,
+      },
+    });
+
+    Render.run(render);
+
+    var runner = Runner.create();
+    Runner.run(runner, engine);
+
+    var group = Body.nextGroup(true);
+
+    var bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
+      return Bodies.rectangle(x - 20, y, 53, 20, {
+        collisionFilter: { group: group },
+        chamfer: 5,
+        density: 0.005,
+        frictionAir: 0.05,
+        render: {
+          fillStyle: "#66fcf1",
+          strokeStyle: "#66fcf1",
+          lineWidth: 1,
+        },
+      });
+    });
+
+    Composites.chain(bridge, 0.3, 0, -0.3, 0, {
+      stiffness: 1,
+      length: 0,
+      render: {
+        visible: false,
+      },
+    });
+
+    var stack = Composites.stack(250, 50, 6, 3, 0, 0, function (x, y) {
+      return Bodies.rectangle(x, y, 50, 50, {
+        render: { fillStyle: "#080808", strokeStyle: "#66fcf1", lineWidth: 1 },
+      });
+    });
+
+    World.add(world, [
+      bridge,
+      stack,
+      Bodies.rectangle(400, 0, 800, 50, {
+        isStatic: true,
+        render: {
+          fillStyle: "#080808",
+          strokeStyle: "#66fcf1",
+          lineWidth: 1,
+          visible: false,
+        },
+      }),
+      Bodies.rectangle(400, 600, 800, 50, {
+        isStatic: true,
+        render: {
+          fillStyle: "#080808",
+          strokeStyle: "#66fcf1",
+          lineWidth: 1,
+          visible: false,
+        },
+      }),
+      Bodies.rectangle(800, 300, 50, 600, {
+        isStatic: true,
+        render: {
+          fillStyle: "#080808",
+          strokeStyle: "#66fcf1",
+          lineWidth: 1,
+          visible: false,
+        },
+      }),
+      Bodies.rectangle(0, 300, 50, 600, {
+        isStatic: true,
+        render: {
+          fillStyle: "#080808",
+          strokeStyle: "#66fcf1",
+          lineWidth: 1,
+          visible: false,
+        },
+      }),
+      Bodies.rectangle(30, 590, 220, 380, {
+        isStatic: true,
+        chamfer: { radius: 20 },
+        render: { fillStyle: "#080808", strokeStyle: "#66fcf1", lineWidth: 1 },
+      }),
+      Bodies.rectangle(770, 590, 220, 380, {
+        isStatic: true,
+        chamfer: { radius: 20 },
+        render: { fillStyle: "#080808", strokeStyle: "#66fcf1", lineWidth: 1 },
+      }),
+      Constraint.create({
+        pointA: { x: 140, y: 410 },
+        bodyB: bridge.bodies[0],
+        pointB: { x: -25, y: 0 },
+        length: 2,
+        stiffness: 0.9,
+      }),
+      Constraint.create({
+        pointA: { x: 660, y: 410 },
+        bodyB: bridge.bodies[bridge.bodies.length - 1],
+        pointB: { x: 25, y: 0 },
+        length: 2,
+        stiffness: 0.9,
+      }),
+    ]);
+
+    var mouse = Mouse.create(render.canvas),
+      mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+          stiffness: 0.1,
+          render: {
+            visible: false,
+          },
+        },
+      });
+
+    World.add(world, mouseConstraint);
+
+    render.mouse = mouse;
+    Render.lookAt(render, {
+      min: { x: 0, y: 0 },
+      max: { x: 800, y: 600 },
+    });
+    return {
+      engine: engine,
+      runner: runner,
+      render: render,
+      canvas: render.canvas,
+      stop: function () {
+        Matter.Render.stop(render);
+        Matter.Runner.stop(runner);
+      },
+    };
+  };
+
+  Example.bridge();
+})();
+
+function fusion() {
+  const canvas = document.querySelector("#fusion");
   const ctx = canvas.getContext("2d");
+  console.log(canvas);
   let width;
   let height;
   class Line {
@@ -29,36 +198,36 @@ ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove(
       return [
         {
           line: `h${this.size}`,
-          mag: this.size
+          mag: this.size,
         },
         {
           line: `h-${this.size}`,
-          mag: this.size
+          mag: this.size,
         },
         {
           line: `v${this.size}`,
-          mag: this.size
+          mag: this.size,
         },
         {
           line: `v-${this.size}`,
-          mag: this.size
+          mag: this.size,
         },
         {
           line: `l${this.size},${this.size}`,
-          mag: Math.hypot(this.size, this.size)
+          mag: Math.hypot(this.size, this.size),
         },
         {
           line: `l${this.size}-${this.size}`,
-          mag: Math.hypot(this.size, this.size)
+          mag: Math.hypot(this.size, this.size),
         },
         {
           line: `l-${this.size},${this.size}`,
-          mag: Math.hypot(this.size, this.size)
+          mag: Math.hypot(this.size, this.size),
         },
         {
           line: `l-${this.size}-${this.size}`,
-          mag: Math.hypot(this.size, this.size)
-        }
+          mag: Math.hypot(this.size, this.size),
+        },
       ];
     }
     generate() {
@@ -74,7 +243,7 @@ ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove(
       }
       this.line = {
         path,
-        mag
+        mag,
       };
       return this;
     }
@@ -83,7 +252,7 @@ ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove(
         ctx.lineDashOffset = this.line.mag + this.offSet;
         ctx.setLineDash([
           this.size ** 1.5,
-          (this.line.mag / this.length) * this.size ** 2
+          (this.line.mag / this.length) * this.size ** 2,
         ]);
         this.offSet += 20;
         // this.size / (this.size ** 2);
@@ -128,7 +297,7 @@ ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove(
       {
         size: 1.25,
         style: "pattern",
-        color: { h: 210, s: 100, l: 70, a: 0.5 }
+        color: { h: 210, s: 100, l: 70, a: 0.5 },
       },
       { size: 2.5, style: "pattern", color: { h: 190, s: 90, l: 50, a: 0.3 } },
       { size: 5, style: "pattern", color: { h: 210, s: 70, l: 60, a: 0.2 } },
@@ -137,9 +306,13 @@ ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove(
       { size: 20, style: "pattern", color: { h: 210, s: 20, l: 40, a: 0.12 } },
       { size: 40, style: "pattern", color: { h: 190, s: 40, l: 50, a: 0.12 } },
       { size: 80, style: "pattern", color: { h: 220, s: 50, l: 60, a: 0.12 } },
-      { size: 40, style: "glitches", color: { h: 300, s: 100, l: 50, a: 0.15 } },
+      {
+        size: 40,
+        style: "glitches",
+        color: { h: 300, s: 100, l: 50, a: 0.15 },
+      },
       { size: 20, style: "glitches", color: { h: 175, s: 96, l: 69, a: 0.15 } },
-      { size: 60, style: "glitches", color: { h: 30, s: 100, l: 50, a: 0.15 } }
+      { size: 60, style: "glitches", color: { h: 30, s: 100, l: 50, a: 0.15 } },
     ];
     for (let i = 0; i < amount; i += 1) {
       let style = styles[(Math.random() ** 2 * styles.length) | 0];
@@ -178,7 +351,10 @@ ctaContainer.addEventListener('mouseleave', () => glitchTarget.classList.remove(
     id = requestAnimationFrame(update);
   }
   window.addEventListener("resize", resize, {
-    passive: true
+    passive: true,
   });
   resize();
-})();
+}
+
+fusion();
+
